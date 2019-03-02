@@ -1,0 +1,108 @@
+data:
+  dataset: {name: uscensus-9, samples: 92842, type: private}
+  datasetLoadOption: batch
+  kfold: 1
+  mapping:
+    gender:
+      options: {Normalization: false, Scaling: 1}
+      port: OutputPort0
+      shape: ''
+      type: Numeric
+    name:
+      options: {Normalization: false, Scaling: 1}
+      port: InputPort0
+      shape: ''
+      type: Array
+  numPorts: 1
+  samples: {split: 4, test: 9284, training: 74273, validation: 9284}
+  shuffle: true
+model:
+  connections:
+  - {source: GlobalMaxPooling1D_4, target: merge_2}
+  - {source: GlobalMaxPooling1D_1, target: merge_2}
+  - {source: GlobalMaxPooling1D_9, target: merge_2}
+  - {source: Embedding_1, target: Convolution1D_1}
+  - {source: Embedding_1, target: Convolution1D_6}
+  - {source: Embedding_1, target: Convolution1D_11}
+  - {source: Convolution1D_6, target: GlobalMaxPooling1D_4}
+  - {source: Convolution1D_11, target: GlobalMaxPooling1D_9}
+  - {source: Convolution1D_1, target: GlobalMaxPooling1D_1}
+  - {source: Dropout_3, target: Dense_15}
+  - {source: Input_1, target: Embedding_1}
+  - {source: merge_2, target: Dense_13}
+  - {source: Dense_15, target: Output_1}
+  - {source: Dense_13, target: Dropout_3}
+  layers:
+  - args: {}
+    class: Input
+    name: Input_1
+    x: 322
+    y: 20
+  - args: {}
+    class: Output
+    name: Output_1
+    x: 242
+    y: 964
+  - args: {input_dim: '28', input_length: '9', output_dim: '32'}
+    class: Embedding
+    name: Embedding_1
+    x: 322
+    y: 130
+  - args: {activation: tanh, filter_length: '3', nb_filter: '32'}
+    class: Convolution1D
+    name: Convolution1D_1
+    x: 30
+    y: 279
+  - args: {}
+    class: GlobalMaxPooling1D
+    name: GlobalMaxPooling1D_1
+    x: 29
+    y: 411
+  - args: {activation: sigmoid, output_dim: '32'}
+    class: Dense
+    name: Dense_13
+    x: 241
+    y: 646
+  - args: {p: '0.2'}
+    class: Dropout
+    name: Dropout_3
+    x: 240
+    y: 747
+  - args: {activation: sigmoid, output_dim: '1'}
+    class: Dense
+    name: Dense_15
+    x: 241
+    y: 857
+  - args: {activation: tanh, filter_length: '5', nb_filter: '32'}
+    class: Convolution1D
+    name: Convolution1D_6
+    x: 327
+    y: 280
+  - args: {}
+    class: GlobalMaxPooling1D
+    name: GlobalMaxPooling1D_4
+    x: 329
+    y: 412
+  - args: {}
+    class: merge
+    name: merge_2
+    x: 238
+    y: 546
+  - args: {activation: tanh, filter_length: '4', nb_filter: '32'}
+    class: Convolution1D
+    name: Convolution1D_11
+    x: 607
+    y: 279
+  - args: {}
+    class: GlobalMaxPooling1D
+    name: GlobalMaxPooling1D_9
+    x: 608
+    y: 411
+params:
+  advance_params: true
+  batch_size: 32
+  is_custom_loss: false
+  loss_func: binary_crossentropy
+  num_epoch: 15
+  optimizer: {name: Adam}
+project: CNN Gender Classification
